@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Servo - XHR Race condition demo</title>
+  <script>
+    function handleEvent(e) {
+      switch (e.type) {
+        case "load": 
+          for (var i = 0; i < 6000; i++) {
+            document.getElementById("loaded-res").textContent = "Loaded - " + i;
+          }
+          break;
+        case "timeout":
+          document.getElementById("timeout-res").textContent = "Timed out";
+          break;
+      }
+    }
+
+    var req= new XMLHttpRequest();
+    req.onload = handleEvent;
+    req.ontimeout = handleEvent;
+    req.timeout = 1000;
+    req.open("GET", "index.html", true);
+    req.send();
+
+  </script>
+</head>
+<body>
+  <h3 id="loaded-res">
+  </h3>
+  <h3 id="timeout-res">
+  </h3>
+</body>
+</html>
