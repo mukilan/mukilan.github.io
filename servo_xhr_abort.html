@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Servo - XHR Race condition demo</title>
+  <script>
+    var i = 0;
+    map = ["testb.txt","testc.txt"];
+    function handleEvent(e) {
+      if (e.target.readyState != 3) return;
+      resp = e.target.response;
+      e.target.abort();
+      document.getElementById("loaded-res").textContent += resp + "---aborted";
+      if (i >= 2) return;
+      e.target.open("GET", map[i++], true);
+      e.target.send();
+    }
+
+    var req = new XMLHttpRequest();
+    req.onreadystagechange = handleEvent;
+    req.open("GET", "testa.txt", true);
+    req.send();
+
+  </script>
+</head>
+<body>
+  <h3 id="loaded-res">
+  </h3>
+</body>
+</html>
