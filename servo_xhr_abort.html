@@ -16,7 +16,7 @@
     }
 
     var req = new XMLHttpRequest();
-    req.onreadystagechange = handleEvent;
+    req.onreadystatechange = handleEvent;
     req.open("GET", "testa.txt", true);
     req.send();
 
