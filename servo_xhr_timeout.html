@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Servo - XHR Race condition demo</title>
+</head>
+<body>
+  <h3 id="dummy">
+  </h3>
+  <h3 id="headers">
+  </h3>
+  <h3 id="loaded">
+  </h3>
+  <script>
+    function handleEvent(e) {
+      state = e.target.readyState
+      if (state == 2)
+        document.getElementById("headers").textContent =  "Received headers";
+      if (state == 3 || state == 4)
+        document.getElementById("loaded").textContent = e.target.response;
+    }
+
+    function handleTimeout(e) {
+        document.getElementById("dummy").textContent += "Timed out."
+    }
+
+    var timeout = window.prompt("Enter a timeout value: ", "600");
+    timeout = parseInt(timeout);
+
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = handleEvent;
+    req.timeout = timeout;
+    req.ontimeout = handleTimeout;
+    req.open("GET", "testa.txt", true);
+    req.send();
+
+    var startTime = new Date().getTime();
+    while (new Date().getTime() < startTime + timeout * 2);
+
+    document.getElementById("dummy").textContent += "Timeout Value: " + timeout;
+  </script>
+</body>
+</html>
