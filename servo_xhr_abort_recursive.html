@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>XHR abort in ready state handler and perform synchronous send</title>
+</head>
+<body>
+  <h2>Events fired</h2>
+  <h3 id="events">
+  </h3>
+  <h2>Response Body</h2>
+  <span id="loaded">
+  </span>
+  <script>
+
+    function handleEvent(e) {
+      var parent = document.getElementById("events");
+      var event = document.createElement("span");
+      event.textContent += "Event Type: " + e.type;
+      event.textContent += "; Ready State: " + e.target.readyState;
+      parent.appendChild(event);
+      parent.appendChild(document.createElement("br"));
+    }
+
+    function handleStateChange(e) {
+      if (e.target.readyState != 4) return;
+      this.onprogress = handleEvent;
+      this.onload = handleEvent;
+      this.onloadend = handleEvent;
+      resp = this.response;
+      this.abort();
+      document.getElementById("loaded").textContent += resp + "---aborted";
+      this.onreadystatechange = null;
+      this.open("GET", "index.html", false);
+      this.send();
+    }
+
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = handleStateChange;
+    req.open("GET", "index.html", true);
+    req.send();
+
+  </script>
+</body>
+</html>

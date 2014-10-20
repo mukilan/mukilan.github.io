@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>XHR abort in ready state handler when done</title>
+</head>
+<body>
+  <h2>Events fired</h2>
+  <h3 id="events">
+  </h3>
+  <h2>Response</h2>
+  <span id="loaded">
+  </span>
+  <script>
+
+    function handleEvent(e) {
+      var parent = document.getElementById("events");
+      var event = document.createElement("span");
+      event.textContent += "Event Type: " + e.type;
+      event.textContent += "; Ready State: " + e.target.readyState;
+      parent.appendChild(event);
+      parent.appendChild(document.createElement("br"));
+    }
+
+    function handleStateChange(e) {
+      if (this.readyState != 4) return;
+      resp = this.response;
+      this.onprogress = handleEvent;
+      this.onload = handleEvent;
+      this.onloadend = handleEvent;
+      this.onreadystatechange = null;
+      this.abort();
+      document.getElementById("loaded").textContent += resp + "---aborted";
+    }
+
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = handleStateChange;
+    req.open("GET", "index.html", true);
+    req.send();
+
+  </script>
+</body>
+</html>
