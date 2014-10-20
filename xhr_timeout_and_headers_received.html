@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>XHR Timeout after headers received</title>
+</head>
+<body>
+  <h2>Events fired</h2>
+  <h3 id="events">
+  </h3>
+  <script>
+
+    function handleEvent(e) {
+      var parent = document.getElementById("events");
+      var event = document.createElement("span");
+      event.textContent += "Event Type: " + e.type;
+      event.textContent += "; Ready State: " + e.target.readyState;
+      parent.appendChild(event);
+      parent.appendChild(document.createElement("br"));
+    }
+
+
+    var req = new XMLHttpRequest();
+    req.onreadystatechange = handleEvent;
+    req.ontimeout = handleEvent;
+    var timeout = window.prompt("Enter a timeout value in ms:", 300);
+    req.timeout = parseInt(timeout);
+    req.open("GET", "testa.txt", true);
+    req.send();
+
+  </script>
+</body>
+</html>
